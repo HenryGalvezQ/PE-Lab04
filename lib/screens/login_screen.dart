@@ -17,7 +17,6 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _loading = false;
   String? _error;
 
-  // Coloca aquí tu API key real de Firebase
   final String firebaseApiKey = "AIzaSyBwQssXFmr8P1cTcR_feDaZDLcdwx-JaVI";
 
   void _login() async {
