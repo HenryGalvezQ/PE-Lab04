@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
         // Definimos el estilo de las tarjetas globalmente
         cardTheme: CardThemeData(
           elevation: 2,
-          // Bordes redondeados consistentes con tu app de Kotlin
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),
@@ -46,9 +45,7 @@ class MyApp extends StatelessWidget {
             fontSize: 20,
             fontWeight: FontWeight.w500,
           ),
-          iconTheme: IconThemeData(
-            color: Colors.black87,
-          ),
+          iconTheme: IconThemeData(color: Colors.black87),
         ),
 
         // Estilo para los campos de texto

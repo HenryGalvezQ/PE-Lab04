@@ -85,36 +85,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     TextFormField(
                       controller: _firstName,
                       decoration: const InputDecoration(labelText: 'Nombre'),
-                      validator: (v) =>
-                          v!.isEmpty ? 'Campo obligatorio' : null,
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _lastName,
                       decoration: const InputDecoration(labelText: 'Apellido'),
-                      validator: (v) =>
-                          v!.isEmpty ? 'Campo obligatorio' : null,
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _dni,
                       decoration: const InputDecoration(labelText: 'DNI'),
-                      validator: (v) =>
-                          v!.isEmpty ? 'Campo obligatorio' : null,
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _email,
-                      decoration:
-                          const InputDecoration(labelText: 'Correo electrónico'),
-                      validator: (v) =>
-                          v!.isEmpty ? 'Campo obligatorio' : null,
+                      decoration: const InputDecoration(
+                        labelText: 'Correo electrónico',
+                      ),
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
                       keyboardType: TextInputType.emailAddress,
                     ),
                     const SizedBox(height: 12),
                     TextFormField(
                       controller: _password,
-                      decoration: const InputDecoration(labelText: 'Contraseña'),
+                      decoration: const InputDecoration(
+                        labelText: 'Contraseña',
+                      ),
                       obscureText: true,
                       validator: (v) => v!.length < 6
                           ? 'Debe tener al menos 6 caracteres'
@@ -136,8 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ? const SizedBox(
                               height: 20,
                               width: 20,
-                              child:
-                                  CircularProgressIndicator(strokeWidth: 2),
+                              child: CircularProgressIndicator(strokeWidth: 2),
                             )
                           : const Text('Registrarse'),
                     ),
@@ -147,7 +145,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (_) => const LoginScreen()),
+                            builder: (_) => const LoginScreen(),
+                          ),
                         );
                       },
                       child: const Text('¿Ya tienes cuenta? Inicia sesión'),

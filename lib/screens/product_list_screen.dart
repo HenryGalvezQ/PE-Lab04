@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/api_service.dart';
 import 'product_detail_screen.dart';
+import 'create_product_state.dart';
+import 'create_product_step1.dart';
 
 class ProductListScreen extends StatefulWidget {
   const ProductListScreen({super.key});
@@ -48,7 +50,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
       final products = await _apiService.fetchProducts();
       setState(() {
         _allProducts = products;
-        _filteredProducts = products; // Al inicio, la lista filtrada es igual a la total
+        _filteredProducts =
+            products; // Al inicio, la lista filtrada es igual a la total
         _isLoading = false;
       });
     } catch (e) {
@@ -66,7 +69,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
       _filteredProducts = _allProducts.where((product) {
         final brand = product.brand.toLowerCase();
         final model = product.model.toLowerCase();
-        
+
         // Busca si la marca O el modelo contienen el texto
         return brand.contains(query) || model.contains(query);
       }).toList();
@@ -80,6 +83,21 @@ class _ProductListScreenState extends State<ProductListScreen> {
         // (MODIFICADO) El body ahora llama a una función que decide qué mostrar
         child: _buildBody(),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+          final state = CreateProductState();
+          final created = await Navigator.push(
+            context,
+            MaterialPageRoute(builder: (_) => CreateProductStep1(state: state)),
+          );
+          if (created == true) {
+            _fetchProducts();
+          }
+        },
+        icon: const Icon(Icons.add),
+        label: const Text('Vender'),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 
@@ -91,7 +109,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
     if (_error != null) {
       return _buildErrorView(_error!);
     }
-    
+
     // (MODIFICADO) La lista ahora se construye con la data en estado
     return ListView.separated(
       padding: const EdgeInsets.all(20.0),
@@ -108,7 +126,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         if (index == 1) {
           return _buildSearchBar();
         }
-        
+
         // (NUEVO) Si la lista está vacía, muestra el placeholder
         if (_filteredProducts.isEmpty) {
           return _buildEmptyView();
@@ -129,22 +147,22 @@ class _ProductListScreenState extends State<ProductListScreen> {
         Text(
           'Bienvenido a',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
         Text(
           'ReMarket',
           style: Theme.of(context).textTheme.headlineLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
+            fontWeight: FontWeight.bold,
+            color: Theme.of(context).colorScheme.primary,
+          ),
         ),
         const SizedBox(height: 4),
         Text(
           'Encuentra y vende dispositivos de segunda mano',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -152,7 +170,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
 
   // (MODIFICADO) Barra de búsqueda
   Widget _buildSearchBar() {
-    return TextField( // Le quitamos el 'const'
+    return TextField(
+      // Le quitamos el 'const'
       controller: _searchController, // (NUEVO) Asignamos el controller
       decoration: const InputDecoration(
         labelText: 'Buscar marca, modelo…',
@@ -164,7 +183,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
   // Tarjeta de producto (Sin cambios)
   Widget _buildProductCard(BuildContext context, Product product) {
     // Lógica para obtener la primera imagen válida (evita errores)
-    final String imageUrl = product.imageUrls.isNotEmpty &&
+    final String imageUrl =
+        product.imageUrls.isNotEmpty &&
             product.imageUrls.first.trim().isNotEmpty
         ? product.imageUrls.first
         : 'https_invalid_url_placeholder'; // Forzamos el errorBuilder
@@ -217,8 +237,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     Text(
                       '${product.brand} ${product.model}',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                        fontWeight: FontWeight.w600,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -226,12 +246,13 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     // "Chip" de almacenamiento
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 4.0),
+                        horizontal: 8.0,
+                        vertical: 4.0,
+                      ),
                       decoration: BoxDecoration(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .secondaryContainer
-                            .withOpacity(0.5),
+                        color: Theme.of(
+                          context,
+                        ).colorScheme.secondaryContainer.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                       child: Text(
@@ -243,9 +264,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
                     Text(
                       '\$${product.price.toStringAsFixed(2)}',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                     ),
                   ],
                 ),
@@ -255,10 +276,9 @@ class _ProductListScreenState extends State<ProductListScreen> {
               Container(
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .primaryContainer
-                      .withOpacity(0.3),
+                  color: Theme.of(
+                    context,
+                  ).colorScheme.primaryContainer.withOpacity(0.3),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
@@ -296,7 +316,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
             ),
             const SizedBox(height: 20),
             ElevatedButton(
-              onPressed: _fetchProducts, // (MODIFICADO) Llama a la nueva función de carga
+              onPressed:
+                  _fetchProducts, // (MODIFICADO) Llama a la nueva función de carga
               child: const Text('Reintentar'),
             ),
           ],

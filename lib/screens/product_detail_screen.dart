@@ -29,9 +29,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Detalle del Producto'),
-      ),
+      appBar: AppBar(title: const Text('Detalle del Producto')),
       body: FutureBuilder<Product>(
         future: _productDetailFuture,
         builder: (context, snapshot) {
@@ -51,7 +49,6 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
     );
   }
 
-  // --- ¡BUG ARREGLADO AQUÍ! ---
   // Este widget crea el carrusel horizontal de imágenes
   Widget _buildImageCarousel(Product product) {
     // Filtramos imágenes vacías o nulas
@@ -121,16 +118,16 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 Text(
                   '${product.brand} ${product.model} ${product.storage}',
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(height: 8),
                 Text(
                   '\$${product.price.toStringAsFixed(2)}',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const Divider(height: 40),
 
@@ -148,7 +145,8 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
                 _DetailRow(
                   icon: Icons.inventory,
                   label: 'Incluye caja',
-                  value: product.boxImageUrl != null &&
+                  value:
+                      product.boxImageUrl != null &&
                           product.boxImageUrl!.isNotEmpty
                       ? 'Sí'
                       : 'No',
@@ -167,9 +165,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   // Botones fijos en la parte inferior
   Widget _buildBottomButtons(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16.0).copyWith(
-          bottom:
-              32.0), // Más padding abajo para que no pegue al borde
+      padding: const EdgeInsets.all(
+        16.0,
+      ).copyWith(bottom: 32.0), // Más padding abajo para que no pegue al borde
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -177,7 +175,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
             color: Colors.black.withOpacity(0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
-          )
+          ),
         ],
       ),
       child: Column(
@@ -253,7 +251,7 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
   }
 }
 
-// Widget de ayuda para las filas (como en tu código de Kotlin)
+// Widget de ayuda para las filas
 class _DetailRow extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -280,16 +278,16 @@ class _DetailRow extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   value,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurfaceVariant,
-                      ),
+                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ),

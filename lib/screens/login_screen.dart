@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/auth_service.dart';
 import 'register_screen.dart';
 import 'product_list_screen.dart';
+import '../services/session.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -30,6 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
         firebaseApiKey,
       );
+      AuthSession.instance.token = token;
       await _authService.getProfile(token);
       if (!mounted) return;
       Navigator.pushReplacement(
@@ -114,7 +116,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                            builder: (_) => const RegisterScreen()),
+                          builder: (_) => const RegisterScreen(),
+                        ),
                       );
                     },
                     child: const Text('¿No tienes cuenta? Regístrate aquí'),
