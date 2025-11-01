@@ -3,6 +3,8 @@ import '../services/auth_service.dart';
 import 'register_screen.dart';
 import 'product_list_screen.dart';
 import '../services/session.dart';
+import 'main_navigation.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -36,7 +38,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (!mounted) return;
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const ProductListScreen()),
+         MaterialPageRoute(builder: (_) => const MainNavigation()),
       );
     } catch (e) {
       setState(() => _error = e.toString());

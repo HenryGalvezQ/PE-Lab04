@@ -1,37 +1,38 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/product.dart';
 import 'package:flutter/foundation.dart';
-import '../models/product_request.dart';
+import '../models/user.dart';
+import '../models/product.dart';
+import '../models/product_request.dart'; 
 import 'session.dart';
 
 class ApiService {
   static const String _baseUrl = "http://67.205.133.92:9364/";
 
-  // Obtiene la lista completa de productos.
+  // ---------------------------------------------------------------------------
+  // 📦 OBTENER TODOS LOS PRODUCTOS
+  // ---------------------------------------------------------------------------
   Future<List<Product>> fetchProducts() async {
     try {
       final response = await http.get(Uri.parse('$_baseUrl/products'));
 
       if (response.statusCode == 200) {
-        // Si la respuesta es exitosa (200 OK), decodifica el JSON.
         final List<dynamic> productsJson = json.decode(response.body);
-        // Convierte la lista de JSON a una lista de objetos Product.
         return productsJson.map((json) => Product.fromJson(json)).toList();
       } else {
-        // Si el servidor devuelve un error, lanza una excepción.
         throw Exception(
           'Fallo al cargar los productos. Código: ${response.statusCode}',
         );
       }
     } catch (e) {
-      // Captura errores de red o de parseo.
-      print(e);
+      if (kDebugMode) print('fetchProducts error: $e');
       throw Exception('Fallo al conectar con el servidor.');
     }
   }
 
-  // Obtiene un producto específico por su ID.
+  // ---------------------------------------------------------------------------
+  // 🔍 OBTENER DETALLE DE PRODUCTO POR ID
+  // ---------------------------------------------------------------------------
   Future<Product> fetchProductById(String productId) async {
     try {
       final response = await http.get(
@@ -39,7 +40,6 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        // Si la respuesta es exitosa, decodifica el JSON y crea el objeto Product.
         return Product.fromJson(json.decode(response.body));
       } else {
         throw Exception(
@@ -47,11 +47,14 @@ class ApiService {
         );
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) print('fetchProductById error: $e');
       throw Exception('Fallo al conectar con el servidor.');
     }
   }
 
+  // ---------------------------------------------------------------------------
+  // ➕ CREAR NUEVO PRODUCTO
+  // ---------------------------------------------------------------------------
   Future<Product> createProduct(ProductRequest request, {String? token}) async {
     final idToken = token ?? AuthSession.instance.token;
     if (idToken == null || idToken.isEmpty) {
@@ -75,6 +78,31 @@ class ApiService {
         print('createProduct: ${resp.statusCode} -> ${resp.body}');
       }
       throw Exception('Error al crear producto (${resp.statusCode}).');
+    }
+  }
+
+  // ---------------------------------------------------------------------------
+  // 👤 OBTENER PERFIL DEL USUARIO AUTENTICADO
+  // ---------------------------------------------------------------------------
+  Future<User> getMyProfile() async {
+    final token = AuthSession.instance.token;
+    if (token == null || token.isEmpty) {
+      throw Exception('No hay token de sesión. Inicia sesión primero.');
+    }
+
+    final response = await http.get(
+      Uri.parse('$_baseUrl/users/me'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return User.fromJson(data);
+    } else {
+      if (kDebugMode) {
+        print('getMyProfile: ${response.statusCode} -> ${response.body}');
+      }
+      throw Exception('Error al obtener el perfil (${response.statusCode}).');
     }
   }
 }
