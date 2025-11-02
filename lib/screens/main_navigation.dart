@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../services/api_service.dart';
 import '../models/user.dart';
 import 'product_list_screen.dart';
+import 'my_products_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -26,7 +27,7 @@ class _MainNavigationState extends State<MainNavigation> {
   Widget build(BuildContext context) {
     final pages = [
       const ProductListScreen(),
-      const _PlaceholderScreen(title: 'Mis Productos'),
+      const MyProductsScreen(),
       const _PlaceholderScreen(title: 'Mis Chats'),
       _ProfileScreen(profileFuture: _profileFuture),
     ];

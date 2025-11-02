@@ -4,6 +4,8 @@ import 'package:flutter/foundation.dart';
 import '../models/user.dart';
 import '../models/product.dart';
 import '../models/product_request.dart'; 
+import '../models/transaction.dart';
+
 import 'session.dart';
 
 class ApiService {
@@ -103,6 +105,29 @@ class ApiService {
         print('getMyProfile: ${response.statusCode} -> ${response.body}');
       }
       throw Exception('Error al obtener el perfil (${response.statusCode}).');
+    }
+  }
+
+  Future<List<Transaction>> fetchMyTransactions() async {
+    final token = AuthSession.instance.token;
+    if (token == null || token.isEmpty) {
+      throw Exception('No hay token de sesión. Inicia sesión primero.');
+    }
+
+    final response = await http.get(
+      Uri.parse('$_baseUrl/transactions'), // Endpoint de transacciones
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => Transaction.fromJson(json)).toList();
+    } else {
+      if (kDebugMode) {
+        print('fetchMyTransactions: ${response.statusCode} -> ${response.body}');
+      }
+      throw Exception(
+          'Error al obtener transacciones (${response.statusCode}).');
     }
   }
 }
