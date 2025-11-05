@@ -130,4 +130,69 @@ class ApiService {
           'Error al obtener transacciones (${response.statusCode}).');
     }
   }
+  // ---------------------------------------------------------------------------
+// 🛒 CREAR TRANSACCIÓN (COMPRAR/RESERVAR)
+// ---------------------------------------------------------------------------
+Future<Transaction> createTransaction(String productId) async {
+  final token = AuthSession.instance.token;
+  if (token == null || token.isEmpty) {
+    throw Exception('No hay token de sesión. Inicia sesión primero.');
+  }
+
+  final response = await http.post(
+    Uri.parse('$_baseUrl/transactions'), // [cite: 463]
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+    },
+    // El body solo necesita el productId [cite: 473]
+    body: jsonEncode({'productId': productId}),
+  );
+
+  if (response.statusCode == 201) { // [cite: 476]
+    // Devuelve la transacción recién creada
+    return Transaction.fromJson(jsonDecode(response.body));
+  } else {
+    if (kDebugMode) {
+      print(
+          'createTransaction Error: ${response.statusCode} -> ${response.body}');
+    }
+    // Manejo de error específico si el producto ya está reservado
+    if (response.statusCode == 409) {
+      throw Exception('Este producto ya no está disponible o fue reservado.');
+    }
+    throw Exception('Error al reservar el producto (${response.statusCode}).');
+  }
+}
+
+  // ---------------------------------------------------------------------------
+  // ✅ ACTUALIZAR ESTADO DE PRODUCTO (CONFIRMAR VENTA)
+  // ---------------------------------------------------------------------------
+  Future<Product> updateProductStatus(String productId, String status) async {
+    final token = AuthSession.instance.token;
+    if (token == null || token.isEmpty) {
+      throw Exception('No hay token de sesión. Inicia sesión primero.');
+    }
+
+    final response = await http.put(
+      Uri.parse('$_baseUrl/products/$productId'), // [cite: 261]
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      // El body solo necesita el nuevo estado [cite: 271-272]
+      body: jsonEncode({'status': status}),
+    );
+
+    if (response.statusCode == 200) { // [cite: 276]
+      return Product.fromJson(jsonDecode(response.body));
+    } else {
+      if (kDebugMode) {
+        print(
+            'updateProductStatus Error: ${response.statusCode} -> ${response.body}');
+      }
+      throw Exception(
+          'Error al actualizar el estado del producto (${response.statusCode}).');
+    }
+  }
 }
