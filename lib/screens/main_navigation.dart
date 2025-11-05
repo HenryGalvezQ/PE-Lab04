@@ -3,6 +3,7 @@ import '../services/api_service.dart';
 import '../models/user.dart';
 import 'product_list_screen.dart';
 import 'my_products_screen.dart';
+import 'chat_list_screen.dart';
 
 class MainNavigation extends StatefulWidget {
   const MainNavigation({super.key});
@@ -28,7 +29,7 @@ class _MainNavigationState extends State<MainNavigation> {
     final pages = [
       const ProductListScreen(),
       const MyProductsScreen(),
-      const _PlaceholderScreen(title: 'Mis Chats'),
+      const ChatListScreen(),
       _ProfileScreen(profileFuture: _profileFuture),
     ];
 
