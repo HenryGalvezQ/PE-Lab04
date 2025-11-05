@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "839854628061",
+    "project_id": "remarket-f9a2b",
+    "storage_bucket": "remarket-f9a2b.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839854628061:android:68714cd5226b4692c80f34",
+        "android_client_info": {
+          "package_name": "com.example.remarket"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwQssXFmr8P1cTcR_feDaZDLcdwx-JaVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839854628061:android:048a167448f79acfc80f34",
+        "android_client_info": {
+          "package_name": "com.example.remarket_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwQssXFmr8P1cTcR_feDaZDLcdwx-JaVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

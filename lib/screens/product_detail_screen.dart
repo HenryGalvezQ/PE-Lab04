@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/product.dart';
 import '../services/api_service.dart';
+import '../services/chat_service.dart';
+import '../screens/chat_screen.dart';
+import '../models/chat.dart';
+import '../models/user.dart';
 
 class ProductDetailScreen extends StatefulWidget {
   final String productId;
@@ -157,13 +161,13 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
 
         // 4. Botones (deshabilitados para visitante)
-        _buildBottomButtons(context),
+        _buildBottomButtons(context, product),
       ],
     );
   }
 
   // Botones fijos en la parte inferior
-  Widget _buildBottomButtons(BuildContext context) {
+  Widget _buildBottomButtons(BuildContext context, Product product) {
     return Container(
       padding: const EdgeInsets.all(
         16.0,
@@ -183,7 +187,9 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         children: [
           // Botón "Contactar Vendedor" (deshabilitado)
           OutlinedButton(
-            onPressed: null, // Deshabilitado
+            onPressed: () {
+              _startChat(product);
+            },
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(double.infinity, 50),
               side: BorderSide(color: Colors.grey.shade300),
@@ -248,6 +254,41 @@ class _ProductDetailScreenState extends State<ProductDetailScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> _startChat(Product product) async {
+    try {
+      // Evitar chat con uno mismo: saco mi perfil del backend
+      final me = await _apiService.getMyProfile(); // /users/me
+      // :contentReference[oaicite:7]{index=7}
+      if (me.id == product.sellerId) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('Este producto es tuyo.')));
+        return;
+      }
+
+      final chat = await ChatService().startOrGetChat(
+        productId: product.id,
+        counterpartId: product.sellerId, // sellerId viene en Product
+        // :contentReference[oaicite:8]{index=8}
+      );
+
+      if (!mounted) return;
+      final title = '${product.brand} ${product.model}';
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => ChatScreen(chatId: chat.id, title: title),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('No se pudo abrir el chat: $e')));
+    }
   }
 }
 
